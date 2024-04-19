@@ -14,6 +14,8 @@ public class NikoliThreadRunner{
 
     public static void main(String[] args) {
 
+        /// THREAD RUNNER FOR nIKOLIgEN.JAVA:
+        /* 
         ArrayList<Thread> threads = new ArrayList<>();
         for (int n_threads = 0; n_threads < 30; n_threads++){
             NikoliGen gen = new NikoliGen();
@@ -21,6 +23,14 @@ public class NikoliThreadRunner{
             threads.add(genThread);
             genThread.start();
         }
+        */
+
+        NikoliGenRedo genR = new NikoliGenRedo();
+        Thread genThread = new Thread(genR);
+        try {
+            genThread.start();
+            genThread.join();
+        } catch (InterruptedException e) { e.printStackTrace(); }
 
         // System.out.println("started threads");
         // try { Thread.sleep(10000);} 
