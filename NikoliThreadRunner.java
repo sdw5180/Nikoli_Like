@@ -28,10 +28,13 @@ public class NikoliThreadRunner{
         */
 
         // beep to indicate program running:
-        Toolkit.getDefaultToolkit().beep();
+        //Toolkit.getDefaultToolkit().beep();
+        System.out.println("Running generator... this may take a few minutes...");
 
         //NikoliGenRedo genR = new NikoliGenRedo();
         //Thread genThread = new Thread(genR);
+        //genThread.run();
+         
 
         ArrayList<Thread> threads = new ArrayList<>();
         for (int n_threads = 0; n_threads < 10; n_threads++){
@@ -43,6 +46,7 @@ public class NikoliThreadRunner{
             thread.start();
         }
         
+
         // System.out.println("started threads");
         // try { Thread.sleep(10000);} 
         // catch (InterruptedException e) { System.out.println("crash"); }

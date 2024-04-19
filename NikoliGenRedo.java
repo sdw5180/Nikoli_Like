@@ -9,10 +9,11 @@ import java.awt.Toolkit;
 
 public class NikoliGenRedo implements Runnable{
     private  int[][] board;
-    private static int BOARD_SIZE = 10;                        // sets the dimensions of the board
+    private static int BOARD_SIZE = 8;                        // sets the dimensions of the board
     private static boolean DEBUG_MODE = false;
     private  Random random = new Random();
     private int puzNum = 0;
+    private int count = 0;
 
 
     /**
@@ -28,12 +29,11 @@ public class NikoliGenRedo implements Runnable{
         int[] indexMods = {-1, 1};
         // check each neighborung cell for equivelent values:
         for (int ind1 : indexMods){
-            try{
-                if (this.board[i + ind1][j] == currentCell){ neighborCount += 1; }
-            }catch (IndexOutOfBoundsException e) {} // do nothing
-            try{
-                if (this.board[i][j + ind1] == currentCell){ neighborCount += 1; }
-            }catch (IndexOutOfBoundsException e) {} // do nothing
+            int indexNew = i + ind1;
+            if (indexNew > 0 && indexNew < BOARD_SIZE) {
+                if (this.board[indexNew][j] == currentCell){ neighborCount += 1; break; }
+                if (this.board[i][indexNew] == currentCell){ neighborCount += 1; break; }
+            }
         }
         // neighborCount will always be at least one, since (i, j) will always equal itself, so a
         // count greater than 1 indicates the cell has at least one neighboring cell of the same value:
@@ -45,6 +45,7 @@ public class NikoliGenRedo implements Runnable{
         boolean regionsComplete = false;
         while (!regionsComplete){
             this.board = new int[BOARD_SIZE][BOARD_SIZE];
+            this.count += 1;
             // Randomly set every space on the board as a -1 or 1:
             for (int i = 0; i < BOARD_SIZE; i++){ 
                 for (int j = 0; j < BOARD_SIZE; j++){
@@ -62,7 +63,7 @@ public class NikoliGenRedo implements Runnable{
                 for (int j = 0; j < BOARD_SIZE; j++){ 
                     colSum += this.board[i][j]; 
                     // verify no single-cell regions have been created:
-                    if (!hasNeighbors(i, j)) { regionsComplete = false; break; }
+                    //if (!hasNeighbors(i, j)) { regionsComplete = false; break; }
                 }
                 if (colSum != 0) { regionsComplete = false; break;}
             }
@@ -77,9 +78,19 @@ public class NikoliGenRedo implements Runnable{
                 }
             }
 
+            if (regionsComplete){
+                if (DEBUG_MODE) { System.out.println(parsePuzzleText()); }
+                for (int i = 0; i < BOARD_SIZE; i++){         
+                    for (int j = 0; j < BOARD_SIZE; j++){ 
+                        if (!hasNeighbors(i, j)) { regionsComplete = false; break; }
+                    }
+                }
+            }
+            if (count % 100000000 == 0) {System.out.println(this.count);}
+
             // no invalid rows/columns were found, don't regenerate regions:
             if (regionsComplete){ break; }
-            else if (DEBUG_MODE){ System.out.println(parsePuzzleText()); }
+            //else if (DEBUG_MODE){ System.out.println(parsePuzzleText()); }
 
         }
     }
@@ -134,12 +145,13 @@ public class NikoliGenRedo implements Runnable{
 
     @Override
     public void run() {
+        System.out.println("Began thread...");
+
         Scanner consoleIn = new Scanner(System.in);
-        System.out.println("Running generator... this may take a few minutes...");
         while(true){
             genBoard();
             // beep to notify of puzzle creation:
-            Toolkit.getDefaultToolkit().beep();
+            ///Toolkit.getDefaultToolkit().beep();
             System.out.println(parsePuzzleText());
 
             savePuzzle();
