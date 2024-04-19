@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.awt.Toolkit;
+
 
 
 public class NikoliThreadRunner{
@@ -25,13 +27,22 @@ public class NikoliThreadRunner{
         }
         */
 
-        NikoliGenRedo genR = new NikoliGenRedo();
-        Thread genThread = new Thread(genR);
-        try {
-            genThread.start();
-            genThread.join();
-        } catch (InterruptedException e) { e.printStackTrace(); }
+        // beep to indicate program running:
+        Toolkit.getDefaultToolkit().beep();
 
+        //NikoliGenRedo genR = new NikoliGenRedo();
+        //Thread genThread = new Thread(genR);
+
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (int n_threads = 0; n_threads < 10; n_threads++){
+            NikoliGenRedo genR = new NikoliGenRedo();
+            Thread genThread = new Thread(genR);
+            threads.add(genThread);
+        }
+        for (Thread thread : threads){
+            thread.start();
+        }
+        
         // System.out.println("started threads");
         // try { Thread.sleep(10000);} 
         // catch (InterruptedException e) { System.out.println("crash"); }

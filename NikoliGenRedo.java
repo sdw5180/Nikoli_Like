@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Scanner;
+import java.awt.Toolkit;
+
 
 public class NikoliGenRedo implements Runnable{
     private  int[][] board;
@@ -87,9 +89,10 @@ public class NikoliGenRedo implements Runnable{
      * Saves the current puzzle board to the next puzzle save-file
      */
     private void savePuzzle() {
-        String fileName = "puzzle_concept" + puzNum;
+        //String fileName = "puzzle_concept" + puzNum;
+        String fileName = "puzzle_concept" + NikoliGen.getRandomNumber(1, 100);
         File file= new File(fileName);
-        puzNum += 1;
+        //puzNum += 1;
         // Delete preexisting file if name is taken:
         if (file.delete()) { System.out.println("Previous file deleted: " + file.getName()); }
         
@@ -132,19 +135,24 @@ public class NikoliGenRedo implements Runnable{
     @Override
     public void run() {
         Scanner consoleIn = new Scanner(System.in);
+        System.out.println("Running generator... this may take a few minutes...");
         while(true){
             genBoard();
+            // beep to notify of puzzle creation:
+            Toolkit.getDefaultToolkit().beep();
             System.out.println(parsePuzzleText());
-            System.out.println("Save puzzle?\t:s");
-            String save = consoleIn.nextLine();
-            switch (save) {
-                case "s":
-                    savePuzzle();
-                    break;
-                default:
-                    System.out.println("Did not save puzzle");
-                    break;
-            }
+
+            savePuzzle();
+            //System.out.println("Save puzzle?\t:s");
+            //String save = consoleIn.nextLine();
+            //switch (save) {
+            //    case "s":
+            //        savePuzzle();
+            //        break;
+            //   default:
+            //        System.out.println("Did not save puzzle");
+            //        break;
+            // }
         }
     }
 
